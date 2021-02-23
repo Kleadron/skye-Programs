@@ -564,6 +564,7 @@ function fs_code()
   end
   function fs.write(handle, data) return handle._proxy.write(handle._handle, data) end
   function fs.read(handle, length) return handle._proxy.read(handle._handle, length or math.huge) end
+  function fs.seek(handle, mode, position) return handle._proxy.seek(handle._handle, mode, position) end
   function fs.close(handle) return handle._proxy.close(handle._handle) end
   function fs.isDirectory(path)
     local drive
@@ -1430,7 +1431,11 @@ local function runfile(file, ...)
 	    result = {interrupt(result[2])}
 		return
 	  end end end
-      error(result[2] .. "\n" .. traceback, 3)
+      if traceback then
+	  error(result[2] .. "\n" .. traceback, 3)
+	else
+	  error(result[2], 3)
+      end
     end
   else
     error(reason, 3)
